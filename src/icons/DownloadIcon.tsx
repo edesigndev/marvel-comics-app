@@ -13,6 +13,7 @@ const DownloadIcon: React.FC<SVGProps> = ({
     className={className}
     width={width}
     height={height}
+    {...props}
   >
     <path
       stroke-linecap="round"
