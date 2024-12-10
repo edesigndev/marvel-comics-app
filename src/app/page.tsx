@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { Comic, fetchComics } from "@/utils/marvelApi";
 import Image from "next/image";
-import fileDownload from "js-file-download";
+
 import Loader from "@/components/Loader";
+import ShareButton from "@/components/SharedButton";
+import DownloadButton from "@/components/DownloadButton";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -24,12 +26,6 @@ export default function Home() {
     getComics();
   }, [page]);
 
-  const handleDownload = async (url: string, title: string) => {
-    const response = await fetch(url.replace(/^http:\/\//i, 'https://'))
-    const blob = await response.blob();
-    fileDownload(blob, `${title}.jpg`);
-  };
-
   const totalPages = Math.ceil(total / limit);
 
   return (
@@ -46,15 +42,9 @@ export default function Home() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {comics.map((comic) => (
-          <button
+          <div
             className="group relative block bg-black rounded-md overflow-hidden shadow-md"
             key={comic.id}
-            onClick={() =>
-              handleDownload(
-                `${comic.thumbnail.path}.${comic.thumbnail.extension}`,
-                comic.title
-              )
-            }
           >
             <Image
               alt={comic.title}
@@ -72,8 +62,17 @@ export default function Home() {
                   <p className="text-sm text-white">{comic.title}</p>
                 </div>
               </div>
+              <div className="flex flex-row gap-2">
+                <ShareButton
+                  imageUrl={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                />
+                <DownloadButton
+                  imageUrl={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                  title={comic.title}
+                />
+              </div>
             </div>
-          </button>
+          </div>
         ))}
       </div>
 
