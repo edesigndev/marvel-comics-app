@@ -25,7 +25,7 @@ export default function Home() {
   }, [page]);
 
   const handleDownload = async (url: string, title: string) => {
-    const response = await fetch(url);
+    let response = await fetch(url.replace(/^http:\/\//i, 'https://'))
     const blob = await response.blob();
     fileDownload(blob, `${title}.jpg`);
   };
